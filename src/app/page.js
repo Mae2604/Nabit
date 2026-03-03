@@ -1,7 +1,5 @@
-import { SignIn } from '../components/sign-in';
-
 export default function Home() {
   return (
-    <SignIn/>
+    <h1>Hello</h1>
   );
 };

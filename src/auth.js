@@ -1,28 +1,16 @@
-import NextAuth from "next-auth"
-import PostgresAdapter from "@auth/pg-adapter"
-import Resend from "next-auth/providers/resend"
+import { betterAuth } from "better-auth";
+import { Pool } from "pg";
 
-import { Pool } from "pg"
- 
-const pool = new Pool({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-})
- 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PostgresAdapter(pool),
-  providers: [Resend({
-    apiKey: process.env.AUTH_RESEND_KEY,
-    from: "onboarding@resend.dev"
-  })],
-  callbacks: {
-    redirect(){
-      return "/landing";
-    }
-  }
+export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
+  socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID, 
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        }, 
+    },
+  database: new Pool({
+        // connection options
+        connectionString: process.env.PG_CONNECTION_STRING
+    }),
 })
