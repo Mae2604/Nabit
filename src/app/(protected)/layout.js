@@ -6,7 +6,6 @@ export default async function ProtectedLayout({ children }) {
   const session = await auth.api.getSession({
     headers: await headers()
   })
-  console.log("SESSION: ",session)
 
   if (!session) {
     redirect("/sign-in")

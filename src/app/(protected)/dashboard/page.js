@@ -1,6 +1,6 @@
-import SignOutComponent from '../../components/logout/page'
-export default function DashboardPage(){
+import Logout from '../../../components/Logout'
+export default function Dashboard(){
     return(
-        <SignOutComponent/>
+        <Logout/>
     );
 }

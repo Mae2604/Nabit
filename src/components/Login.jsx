@@ -1,6 +1,6 @@
 "use client"
-import { signIn } from '../../../auth-client'
-export default function SignInComponent(){
+import { signIn } from '../auth-client'
+export default function Login(){
     const handleGoogleSignIn = () => {
         signIn();
     };

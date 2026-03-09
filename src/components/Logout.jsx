@@ -1,6 +1,6 @@
 "use client"
-import { signOut } from '../../../auth-client'
-export default function SignOutComponent(){
+import { signOut } from '../auth-client'
+export default function Logout(){
     const handleGoogleSignOut = () => {
         signOut();
     };

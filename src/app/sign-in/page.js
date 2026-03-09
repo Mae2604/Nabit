@@ -1,16 +1,21 @@
-import SignInComponent from '../components/login/page'
+import Login from '../../components/Login'
 import { redirect } from "next/navigation"
 import { auth } from "../../auth"
 import { headers } from "next/headers"
-export default async function SignInPage() {
+export default async function SignIn() {
   const session = await auth.api.getSession({
     headers: await headers()
   })
 
   if (session) {
-    redirect("/dashboard")
+    if (session.user.onboardingComplete == false){
+      redirect("/onboarding")
+    } else{
+      redirect("/dashboard")
+    }
   }
+  
   return (
-    <SignInComponent/>
+    <Login/>
   );
 }
