@@ -7,11 +7,11 @@ export default async function SignIn() {
     headers: await headers()
   })
 
-  if (session) {
+  if (session){
     if (session.user.onboardingComplete == false){
-      redirect("/onboarding")
-    } else{
-      redirect("/dashboard")
+      redirect('/onboarding');
+    } else {
+      redirect('/dashboard');
     }
   }
   

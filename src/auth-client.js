@@ -18,3 +18,7 @@ export const signOut = async () => {
     }
   })
 }
+
+export const refreshSession = async () => {
+  return await authClient.getSession();
+}
