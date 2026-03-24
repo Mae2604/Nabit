@@ -1,3 +1,4 @@
+import './globals.css'
 import { redirect } from "next/navigation"
 import { auth } from "../../auth"
 import { headers } from "next/headers"
