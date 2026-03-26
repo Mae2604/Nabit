@@ -1,6 +1,7 @@
 export default function Home() {
   return (
-    import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+
 function useInView(threshold = 0.15) {
     const ref = useRef(null);
     const [inView, setInView] = useState(false);
@@ -33,7 +34,6 @@ function FadeIn({ children, delay = 0, className = "" }) {
 }
 
 export default function HomePage() {
-    const [faqOpen, setFaqOpen] = useState(null);
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -56,21 +56,7 @@ export default function HomePage() {
         .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
         .btn-outline { background: transparent; color: #1a1a1a; border: 1.5px solid #d0d0d0; padding: 11px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color 0.2s, color 0.2s; font-family: 'DM Sans', sans-serif; }
         .btn-outline:hover { border-color: #2563eb; color: #2563eb; }
-        .feature-card { background: #fff; border-radius: 14px; padding: 28px; border: 1px solid #ebebeb; transition: transform 0.2s, box-shadow 0.2s; }
-        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.07); }
-        .testimonial-card { background: #fff; border-radius: 14px; padding: 28px; border: 1px solid #ebebeb; }
-        .plan-card { background: #fff; border-radius: 16px; padding: 32px; border: 1px solid #ebebeb; transition: transform 0.2s; }
-        .plan-card:hover { transform: translateY(-4px); }
-        .plan-card.highlight { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-        .faq-item { border-bottom: 1px solid #ebebeb; padding: 20px 0; }
-        .faq-btn { background: none; border: none; width: 100%; text-align: left; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Sans', sans-serif; color: #1a1a1a; }
-        .badge { background: #eff6ff; color: #2563eb; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; display: inline-block; letter-spacing: 0.5px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #e8f0fe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
         .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #e0e0e0; padding: 6px 14px; border-radius: 20px; font-size: 13px; color: #555; margin-bottom: 24px; }
-        .grid-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .grid-testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .grid-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 860px; margin: 0 auto; }
-        .section { padding: 88px 24px; max-width: 1100px; margin: 0 auto; }
         .highlight-text { color: #2563eb; }
         .noise { position: absolute; inset: 0; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-repeat: repeat; pointer-events: none; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -80,14 +66,13 @@ export default function HomePage() {
         .hero-animate-4 { animation: fadeUp 0.7s ease 0.55s both; }
         @media (max-width: 600px) {
           .hero-title { font-size: 36px !important; }
-          .grid-plans { grid-template-columns: 1fr; }
           .desktop-nav { display: none; }
         }
         @media (min-width: 601px) {
           .mobile-menu-btn { display: none !important; }
         }
       `}</style>
-  
+
             {/* NAV */}
             <nav style={{
                 position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -102,9 +87,6 @@ export default function HomePage() {
                         Nab<span style={{ color: "#2563eb" }}>it</span>
                     </div>
                     <div className="desktop-nav" style={{ display: "flex", gap: 32, alignItems: "center" }}>
-                        {NAV_LINKS.map(l => (
-                            <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>
-                        ))}
                         <button className="btn-outline" style={{ padding: "8px 20px" }}>Log in</button>
                         <button className="btn-primary" style={{ padding: "8px 20px" }}>Sign up free</button>
                     </div>
@@ -115,12 +97,12 @@ export default function HomePage() {
                 </div>
                 {menuOpen && (
                     <div style={{ background: "#fff", borderTop: "1px solid #ebebeb", padding: "16px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-                        {NAV_LINKS.map(l => <a key={l} href={`#${l.toLowerCase()}`} className="nav-link" onClick={() => setMenuOpen(false)}>{l}</a>)}
                         <button className="btn-primary" style={{ width: "100%" }}>Sign up free</button>
                     </div>
                 )}
             </nav>
-         {/* HERO */}
+
+            {/* HERO */}
             <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", padding: "120px 24px 80px", textAlign: "center", background: "linear-gradient(160deg, #f0f4ff 0%, #f9f8f6 50%, #f9f8f6 100%)", overflow: "hidden" }}>
                 <div className="noise" />
                 <div style={{ position: "absolute", top: "15%", left: "8%", width: 320, height: 320, background: "radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -147,7 +129,8 @@ export default function HomePage() {
                     <p className="hero-animate-4" style={{ marginTop: 20, fontSize: 13, color: "#999" }}>Only verified students. No faculty. No strangers.</p>
                 </div>
             </section>
-{/* CTA BANNER */}
+
+            {/* CTA BANNER */}
             <section style={{ padding: "80px 24px" }}>
                 <FadeIn>
                     <div style={{ maxWidth: 700, margin: "0 auto", background: "#1a1a1a", borderRadius: 20, padding: "56px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
@@ -159,11 +142,27 @@ export default function HomePage() {
                             Join your campus community. Post a request or earn money delivering for fellow students.
                         </p>
                         <button className="btn-primary" style={{ background: "#2563eb", padding: "14px 36px", fontSize: 15 }}>
-                            Create your free account
+                            Create your student account
                         </button>
-                        <p style={{ marginTop: 16, fontSize: 13, color: "#555" }}>MSU students only.</p>
+                        <p style={{ marginTop: 16, fontSize: 13, color: "#555" }}>Verified students only. Free to join.</p>
                     </div>
                 </FadeIn>
             </section>
-  );
+
+            {/* FOOTER */}
+            <footer style={{ borderTop: "1px solid #ebebeb", padding: "40px 24px" }}>
+                <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+                    <div style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800, fontSize: 18 }}>
+                        Nab<span style={{ color: "#2563eb" }}>it</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+                        {["Privacy", "Terms", "Contact"].map(l => (
+                            <a key={l} href="#" style={{ fontSize: 13, color: "#888", textDecoration: "none" }}>{l}</a>
+                        ))}
+                    </div>
+                    <div style={{ fontSize: 13, color: "#bbb" }}>© 2026 Nabit</div>
+                </div>
+            </footer>
+        </div>
+    );
 }
