@@ -1,5 +1,5 @@
-export default function Home() {
-  return (
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 
 function useInView(threshold = 0.15) {
