@@ -13,7 +13,7 @@ export default async function Dashboard(){
 
     return(
         <div>
-            {role == 'requester' ? <RequesterDashboard name={name} id={user_id}/> : <DelivererDashboard/>}
+            {role == 'requester' ? <RequesterDashboard name={name} id={user_id}/> : <DelivererDashboard id={user_id}/>}
             <Logout/>
         </div>
     );

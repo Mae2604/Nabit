@@ -1,18 +1,36 @@
 'use client'
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import {restaurants, locations, tips, base} from '../../app/campus-data'
 import {addRequest} from '../../app/actions'
 import {cancelRequest} from '../../app/actions'
 import {fetcher} from '../../app/utils'
 import useSWR from 'swr'
 export default function RequesterDashboard({name,id}){
-    const { data, error, isLoading } = useSWR(`/api/users/${id}/requests`, fetcher, {refreshInterval: 3000})
+
+    const[isComplete,setIsComplete] = useState(false)
+
+    const { data, error, isLoading, mutate } = useSWR(`/api/users/${id}/requests`, fetcher, {refreshInterval: isComplete ? 0 : 3000})
 
     const[isRequesting,setIsRequesting] = useState(false);
 
     const[form, setForm] = useState(base)
 
     const[errorMessage,setErrorMessage] = useState(null)
+
+    useEffect(() => {
+        if(data != null && data.length > 0 && data[0].status === 'delivered'){
+            setIsComplete(true)
+        }
+    },[data])
+
+    useEffect(() => {
+        if(isComplete){
+            setTimeout(() => {
+                setIsComplete(false)
+                mutate(null)
+            },4000)
+        }
+    },[isComplete])
 
     const handleClick = (value) => {
         setForm(base)
@@ -49,7 +67,7 @@ export default function RequesterDashboard({name,id}){
 
     if(isLoading) return <div>Loading..</div>
 
-    if (data.length > 0){
+    if (data != null && data.length > 0 && data[0].status === 'pending'){
         return (
             <div>
                 {errorMessage &&
@@ -62,8 +80,27 @@ export default function RequesterDashboard({name,id}){
                 <p>Room/floor: {data[0].room_floor}</p>
                 <p>Confirmation Number: {data[0].confirmation_number}</p>
                 <p>Compensation: ${data[0].tip_amount}</p>
+                <p>Status: {data[0].status}</p>
                 <button onClick={handleCancel}>Cancel</button>
             </div>
+        )
+    }
+
+    if (data != null && data.length > 0 && data[0].status === 'accepted'){
+        return (
+            <h1>Your order has been accepted!</h1>
+        )
+    }
+
+    if (data != null && data.length > 0 && data[0].status === 'picked_up'){
+        return (
+            <h1>Your order has been picked up!</h1>
+        )
+    }
+
+    if(isComplete){
+        return (
+            <h1>Your order has been delivered!</h1>
         )
     }
 

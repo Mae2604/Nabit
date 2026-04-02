@@ -35,3 +35,23 @@ export async function cancelRequest(orderId){
     return {success: false, message: 'Order cancellation failed.'}
   }
 }
+
+export async function acceptRequest(deliverer, requestId){
+  try {
+    await pool.query(`UPDATE requests SET status = $1, accepted_by = $2 WHERE id = $3`,["accepted", deliverer, requestId])
+    return {success: true}
+  } catch (error) {
+    console.error(error)
+    return {success: false, message: "Unable to accept request."}
+  }
+}
+
+export async function updateStatus(requestStatus, requestId){
+  try {
+    await pool.query(`UPDATE requests SET status = $1 WHERE id = $2`,[requestStatus,requestId])
+    return {success: true}
+  } catch (error) {
+    console.error(error)
+    return {success: false, message: "Unable to update request status."}
+  }
+}
