@@ -5,6 +5,8 @@ import {addRequest} from '../../app/actions'
 import {cancelRequest} from '../../app/actions'
 import {fetcher} from '../../app/utils'
 import useSWR from 'swr'
+import {ProgressBar} from '../requester/ProgressBar'
+
 export default function RequesterDashboard({name,id}){
 
     const[isComplete,setIsComplete] = useState(false)
@@ -88,13 +90,19 @@ export default function RequesterDashboard({name,id}){
 
     if (data != null && data.length > 0 && data[0].status === 'accepted'){
         return (
-            <h1>Your order has been accepted!</h1>
+            <div>
+                <h1>Your order has been accepted!</h1>
+                <ProgressBar value={0}/>
+            </div>
         )
     }
 
     if (data != null && data.length > 0 && data[0].status === 'picked_up'){
         return (
-            <h1>Your order has been picked up!</h1>
+            <div>
+                <h1>Your order has been picked up!</h1>
+                <ProgressBar value={50}/>
+            </div>
         )
     }
 
