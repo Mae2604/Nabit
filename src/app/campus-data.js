@@ -29,3 +29,22 @@ export const statuses = [
     'delivered',
     'cancelled'
 ]
+
+export const location_coords = {
+    blanton_hall: {lat: 40.86429855089817, lng: -74.19563200502951},
+    bohn_hall: {lat: 40.86373058534867, lng: -74.19460115105487},
+    freeman_hall: {lat: 40.858452063762066, lng: -74.19832354920717},
+    stone_hall: {lat: 40.86247562401194, lng: -74.19525534735878},
+    richardson_hall: {lat: 40.86254746150886, lng: -74.19633903068355},
+    dinallo_heights: {lat: 40.86601137957483, lng: -74.19616240872563},
+    hawk_crossing: {lat: 40.867072713873384, lng: -74.20040976454831},
+    the_village: {lat: 40.87065700596797, lng: -74.19874211852272},
+    school_of_business: {lat: 40.86196810978933, lng: -74.19950499153603},
+    dickson_hall: {lat: 40.86131032658171, lng: -74.19906644920697},
+    schmitt_hall: {lat: 40.86142114131296, lng: -74.19728036270055},
+    cels_building: {lat: 40.86167794093544, lng: -74.19602293386515},
+    student_center: {lat: 40.862897125156486, lng: -74.19744200502963},
+    sprague_library: {lat: 40.86060608522004, lng: -74.19810470502982},
+    university_hall: {lat: 40.86258043606615, lng: -74.1990201492069},
+    morehead_hall: {lat: 40.85978918743869, lng: -74.19736077619446}
+}
