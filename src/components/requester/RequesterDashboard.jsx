@@ -5,6 +5,7 @@ import {addRequest} from '../../app/actions'
 import {cancelRequest} from '../../app/actions'
 import {fetcher} from '../../app/utils'
 import useSWR from 'swr'
+import {signOut} from '../../auth-client'
 import {ProgressBar} from '../requester/ProgressBar'
 
 export default function RequesterDashboard({name,id}){
@@ -18,6 +19,10 @@ export default function RequesterDashboard({name,id}){
     const[form, setForm] = useState(base)
 
     const[errorMessage,setErrorMessage] = useState(null)
+
+    const handleGoogleSignOut = () => {
+        signOut();
+    };
 
     useEffect(() => {
         if(data != null && data.length > 0 && data[0].status === 'delivered'){
@@ -75,40 +80,63 @@ export default function RequesterDashboard({name,id}){
                 {errorMessage &&
                     <p>{errorMessage}</p>
                 }
-                <h1>Active order</h1>
-                <p>Ordered from: {data[0].restaurant}</p>
-                <p>Item(s): {data[0].delivery_contents}</p>
-                <p>Deliver to: {data[0].drop_off_spot}</p>
-                <p>Room/floor: {data[0].room_floor}</p>
-                <p>Confirmation Number: {data[0].confirmation_number}</p>
-                <p>Compensation: ${data[0].tip_amount}</p>
-                <p>Status: {data[0].status}</p>
-                <button onClick={handleCancel}>Cancel</button>
+        <div>
+        <h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Request New Pickup</h1>
+        <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-100 h-100 mx-250 shadow-lg mt-50">
+                <div className="space-y-2 text-center text-black-500 italic p-5">
+                    <h1>Your current pickup information</h1>
+                    <h1>Active order:</h1>
+                    </div>
+                    <img className="size-60 mx-150 absolute -left-10" src="/nabitlogod.png" alt="Nabit Logo" />
+                    <p>Ordered from: {data[0].restaurant}</p>
+                    <p>Item(s): {data[0].delivery_contents}</p>
+                    <p>Deliver to: {data[0].drop_off_spot}</p>
+                    <p>Room/floor: {data[0].room_floor}</p>
+                    <p>Confirmation Number: {data[0].confirmation_number}</p>
+                    <p>Compensation: ${data[0].tip_amount}</p>
+                    <p>Status: {data[0].status}</p>
+                    <button onClick={handleCancel} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">Cancel</button>
+                
             </div>
+        </div>
+        </div>
         )
     }
 
     if (data != null && data.length > 0 && data[0].status === 'accepted'){
         return (
-            <div>
-                <h1>Your order has been accepted!</h1>
-                <ProgressBar value={0}/>
+            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been accepted!</h1>
+            <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+            <div className="space-y-2 text-center text-black-500 italic p-5">
+                <p>Awaiting another student to accept the order</p>
             </div>
+            <p>The progress can be seen below:</p>
+            <ProgressBar value={0} />
+        </div></>
         )
     }
 
     if (data != null && data.length > 0 && data[0].status === 'picked_up'){
         return (
-            <div>
-                <h1>Your order has been picked up!</h1>
-                <ProgressBar value={50}/>
+            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been picked up!</h1>
+            <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+            <div className="space-y-2 text-center text-black-500 italic p-5">
+                <p>Your order is being picked up currently by another student</p>
             </div>
+            <p>The progress can be seen below:</p>
+            <ProgressBar value={50} />
+            </div></>
         )
     }
 
     if(isComplete){
         return (
-            <h1>Your order has been delivered!</h1>
+            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been Delivered!</h1>
+        <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+            <div className="space-y-2 text-center text-black-500 italic p-5">
+                <p>Please enjoy your food, and thank you for choosing Nabit!</p>
+            </div>
+        </div></>
         )
     }
 
@@ -166,8 +194,14 @@ export default function RequesterDashboard({name,id}){
     
     return(
         <div>
-            <h1>Welcome back, {name}!</h1>
-            <button onClick={() => handleClick(true)}>New Request</button>
+            <h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Welcome back, {name}!</h1>
+            <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-100 h100 mx-250 shadow-lg mt-50">
+                <img className="size-60 mx-150 absolute -left-10" src="/nabitlogod.png" alt="Nabit Logo" />
+                <div className="space-y-2 text-center text-black-500 italic p-5">
+                <p className="text-md p-2">New order needs to be delivered?</p></div>
+                <button onClick={() => handleClick(true)} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">New Request</button>
+                 <p className="text-md p-5">Need to log out?</p>
+                    <button onClick={() => handleGoogleSignOut()} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-3">Sign out</button></div>
         </div>
     )
 }

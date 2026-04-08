@@ -7,13 +7,20 @@ export default function Login(){
 
     return (
         <>
-        <div>
-            <div className="text-3xl font-large text-black font-semibold text-center flex-col gap-2 p-8">Welcome to Nabit!</div>
-            <p className="text-black-500 text-center italic">Got your bite, but lazy to walk for the bite? No problem. use Nabit!</p>
-            <img className="size-70 shrink-0 mx-auto max-w-sm gap-2 p-8" src="/nabitlogo.png" alt="Nabit Logo" />
-            <p className="text-gray-700 text-center mx-auto max-w-sm gap-2 p-3">Please sign in to continue.</p>
-        </div>
-            <button onClick={handleGoogleSignIn} className="w-52 h-10 bg-red-500 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">Sign in with Google</button>
+                <div className="bg-white dark:bg-gray-800 dark:text-white p-8 mt-8">
+                    </div>
+                    <h1 className="text-3xl font-large dark:text-white text-grey-400 dark:font-semibold font-semibold text-center flex flex-col p-8">Sign in to Nabit</h1>
+                    <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-10 p-6 w-100 h-100 mx-230 shadow-lg mt-8">
+                        <div className="space-y-4 text-center text-black-500 italic">
+                            <p>Welcome to Nabit</p>
+                            <p>Fast delivery of food on campus from your peers to you!</p>
+                            </div>
+                            <img className="size-60 mx-150 absolute -left-0" src="/nabitlogod.png" alternative="Nabit Logo" />
+                        <p className="text-gray-700 dark:text-gray-300 text-center flex flex-col max-w-sm gap-2 p-3 mt-12">Please sign in to continue.</p>
+                        <button onClick={handleGoogleSignIn} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">Sign in with Google</button>
+                            </div>
+
         </>
+        
     )
 }
