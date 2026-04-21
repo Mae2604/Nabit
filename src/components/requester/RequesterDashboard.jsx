@@ -1,56 +1,54 @@
 'use client'
-import {useState,useEffect} from 'react';
-import {restaurants, locations, tips, base} from '../../app/campus-data'
-import {addRequest} from '../../app/actions'
-import {cancelRequest} from '../../app/actions'
-import {fetcher} from '../../app/utils'
+import { useState, useEffect } from 'react';
+import { restaurants, locations, tips, base } from '../../app/campus-data'
+import { addRequest, cancelRequest } from '../../app/actions'
+import { fetcher } from '../../app/utils'
 import useSWR from 'swr'
-import {signOut} from '../../auth-client'
-import {ProgressBar} from '../requester/ProgressBar'
+import { signOut } from '../../auth-client'
+import { ProgressBar } from '../requester/ProgressBar'
 
-export default function RequesterDashboard({name,id}){
+export default function RequesterDashboard({ name, id }) {
 
-    const[isComplete,setIsComplete] = useState(false)
+    const [isComplete, setIsComplete] = useState(false)
 
-    const { data, error, isLoading, mutate } = useSWR(`/api/users/${id}/requests`, fetcher, {refreshInterval: isComplete ? 0 : 3000})
+    const { data, error, isLoading, mutate } = useSWR(
+        `/api/users/${id}/requests`, fetcher, { refreshInterval: isComplete ? 0 : 3000 }
+    )
 
-    const[isRequesting,setIsRequesting] = useState(false);
+    const [isRequesting, setIsRequesting] = useState(false)
+    const [form, setForm] = useState(base)
+    const [errorMessage, setErrorMessage] = useState(null)
 
-    const[form, setForm] = useState(base)
-
-    const[errorMessage,setErrorMessage] = useState(null)
-
-    const handleGoogleSignOut = () => {
-        signOut();
-    };
+    const handleGoogleSignOut = () => signOut()
 
     useEffect(() => {
-        if(data != null && data.length > 0 && data[0].status === 'delivered'){
+        if (data != null && data.length > 0 && data[0].status === 'delivered') {
             setIsComplete(true)
         }
-    },[data])
+    }, [data])
 
     useEffect(() => {
-        if(isComplete){
-            setTimeout(() => {
+        if (isComplete) {
+            const timer = setTimeout(() => {
                 setIsComplete(false)
                 mutate(null)
-            },4000)
+            }, 4000)
+            return () => clearTimeout(timer)
         }
-    },[isComplete])
+    }, [isComplete, mutate])
 
     const handleClick = (value) => {
         setForm(base)
-        setIsRequesting(value);
+        setIsRequesting(value)
     }
 
     const handleCancel = async () => {
         const res = await cancelRequest(data[0].id)
-        if (res.success){
+        if (res.success) {
             setErrorMessage(null)
         } else {
             console.error(res.message)
-            setErrorMessage(`${res.message}`)
+            setErrorMessage(res.message)
         }
     }
 
@@ -59,33 +57,29 @@ export default function RequesterDashboard({name,id}){
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const res = await addRequest(form,id);
-        if (res.success){
-            setIsRequesting(false);
+        e.preventDefault()
+        const res = await addRequest(form, id)
+        if (res.success) {
+            setIsRequesting(false)
             setErrorMessage(null)
         } else {
             console.error(res.message)
-            setErrorMessage(`${res.message}`)
+            setErrorMessage(res.message)
         }
     }
 
     if (error) return <div>Failed to get active requests.</div>
+    if (isLoading) return <div>Loading..</div>
 
-    if(isLoading) return <div>Loading..</div>
-
-    if (data != null && data.length > 0 && data[0].status === 'pending'){
+    if (data != null && data.length > 0 && data[0].status === 'pending') {
         return (
             <div>
-                {errorMessage &&
-                    <p>{errorMessage}</p>
-                }
-        <div>
-        <h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Request New Pickup</h1>
-        <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-100 h-100 mx-250 shadow-lg mt-50">
-                <div className="space-y-2 text-center text-black-500 italic p-5">
-                    <h1>Your current pickup information</h1>
-                    <h1>Active order:</h1>
+                {errorMessage && <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>}
+                <h1 className="text-4xl font-bold text-center mt-10 mb-3">Request New Pickup</h1>
+                <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-100 h-100 mx-250 shadow-lg mt-50">
+                    <div className="space-y-2 text-center text-black-500 italic p-5">
+                        <h1>Your current pickup information</h1>
+                        <h1>Active order:</h1>
                     </div>
                     <img className="size-60 mx-150 absolute -left-10" src="/nabitlogod.png" alt="Nabit Logo" />
                     <p>Ordered from: {data[0].restaurant}</p>
@@ -94,58 +88,78 @@ export default function RequesterDashboard({name,id}){
                     <p>Room/floor: {data[0].room_floor}</p>
                     <p>Confirmation Number: {data[0].confirmation_number}</p>
                     <p>Compensation: ${data[0].tip_amount}</p>
-                    <p>Status: {data[0].status}</p>
-                    <button onClick={handleCancel} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">Cancel</button>
-                
+                    <p>Status: <strong>{data[0].status}</strong></p>
+
+                    <div className="p-4">
+                        <p className="text-sm text-gray-500 mb-2">Waiting for a deliverer to accept your order...</p>
+                        <ProgressBar value={15} />
+                    </div>
+
+                    <button
+                        onClick={handleCancel}
+                        className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-6"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
-        </div>
-        </div>
         )
     }
-
-    if (data != null && data.length > 0 && data[0].status === 'accepted'){
+    if (data != null && data.length > 0 && data[0].status === 'accepted') {
         return (
-            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been accepted!</h1>
-            <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
-            <div className="space-y-2 text-center text-black-500 italic p-5">
-                <p>Awaiting another student to accept the order</p>
-            </div>
-            <p>The progress can be seen below:</p>
-            <ProgressBar value={0} />
-        </div></>
+            <>
+                <h1 className="text-4xl font-bold text-center mt-10 mb-3">Your order has been accepted!</h1>
+                <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+                    <div className="space-y-2 text-center text-black-500 italic p-5">
+                        <p>A student is on their way to pick up your order from {data[0].restaurant}.</p>
+                    </div>
+                    <div className="p-4">
+                        <p className="text-sm text-gray-500 mb-2">Deliverer heading to restaurant...</p>
+                        <ProgressBar value={40} />
+                    </div>
+                </div>
+            </>
         )
     }
 
-    if (data != null && data.length > 0 && data[0].status === 'picked_up'){
+    if (data != null && data.length > 0 && data[0].status === 'picked_up') {
         return (
-            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been picked up!</h1>
-            <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
-            <div className="space-y-2 text-center text-black-500 italic p-5">
-                <p>Your order is being picked up currently by another student</p>
-            </div>
-            <p>The progress can be seen below:</p>
-            <ProgressBar value={50} />
-            </div></>
+            <>
+                <h1 className="text-4xl font-bold text-center mt-10 mb-3">Your order has been picked up!</h1>
+                <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+                    <div className="space-y-2 text-center text-black-500 italic p-5">
+                        <p>Your order is on the way — head to <strong>{data[0].drop_off_spot}</strong>
+                            {data[0].room_floor ? `, ${data[0].room_floor}` : ''} to receive it.</p>
+                    </div>
+                    <div className="p-4">
+                        <p className="text-sm text-gray-500 mb-2">Deliverer heading to you...</p>
+                        <ProgressBar value={75} />
+                    </div>
+                </div>
+            </>
         )
     }
 
-    if(isComplete){
+    if (isComplete) {
         return (
-            <><h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Your order has been Delivered!</h1>
-        <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
-            <div className="space-y-2 text-center text-black-500 italic p-5">
-                <p>Please enjoy your food, and thank you for choosing Nabit!</p>
-            </div>
-        </div></>
+            <>
+                <h1 className="text-4xl font-bold text-center mt-10 mb-3">Your order has been delivered!</h1>
+                <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-200 h-40 mx-140 shadow-lg mt-50">
+                    <div className="space-y-2 text-center text-black-500 italic p-5">
+                        <p>Please enjoy your food, and thank you for choosing Nabit!</p>
+                    </div>
+                    <div className="p-4">
+                        <ProgressBar value={100} />
+                    </div>
+                </div>
+            </>
         )
     }
 
-    if(isRequesting){
+    if (isRequesting) {
         return (
             <div>
-                {errorMessage &&
-                    <p>{errorMessage}</p>
-                }
+                {errorMessage && <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <label>
                         restaurant
@@ -166,12 +180,30 @@ export default function RequesterDashboard({name,id}){
                             ))}
                         </select>
                     </label>
-                    
-                    <input required name='delivery_contents' value={form.delivery_contents} placeholder='what did you order' onChange={handleChange}></input>
 
-                    <input required name='confirmation_number' value={form.confirmation_number} placeholder='confirmation number' onChange={handleChange}></input>
-                    
-                    <input required name='room_floor' value={form.room_floor} placeholder='room and/or floor' onChange={handleChange}></input>
+                    <input
+                        required
+                        name='delivery_contents'
+                        value={form.delivery_contents}
+                        placeholder='what did you order'
+                        onChange={handleChange}
+                    />
+
+                    <input
+                        required
+                        name='confirmation_number'
+                        value={form.confirmation_number}
+                        placeholder='confirmation number'
+                        onChange={handleChange}
+                    />
+
+                    <input
+                        required
+                        name='room_floor'
+                        value={form.room_floor}
+                        placeholder='room and/or floor'
+                        onChange={handleChange}
+                    />
 
                     <label>
                         tip
@@ -184,24 +216,34 @@ export default function RequesterDashboard({name,id}){
                     </label>
 
                     <button type='submit'>send request</button>
-
                 </form>
                 <button onClick={() => handleClick(false)}>exit</button>
             </div>
         )
     }
 
-    
-    return(
+    return (
         <div>
-            <h1 className="text-4xl font-bold text-center mt-10 mb-3 ">Welcome back, {name}!</h1>
+            <h1 className="text-4xl font-bold text-center mt-10 mb-3">Welcome back, {name}!</h1>
             <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-5 p-3 w-100 h100 mx-250 shadow-lg mt-50">
                 <img className="size-60 mx-150 absolute -left-10" src="/nabitlogod.png" alt="Nabit Logo" />
                 <div className="space-y-2 text-center text-black-500 italic p-5">
-                <p className="text-md p-2">New order needs to be delivered?</p></div>
-                <button onClick={() => handleClick(true)} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">New Request</button>
-                 <p className="text-md p-5">Need to log out?</p>
-                    <button onClick={() => handleGoogleSignOut()} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-3">Sign out</button></div>
+                    <p className="text-md p-2">New order needs to be delivered?</p>
+                </div>
+                <button
+                    onClick={() => handleClick(true)}
+                    className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10"
+                >
+                    New Request
+                </button>
+                <p className="text-md p-5">Need to log out?</p>
+                <button
+                    onClick={handleGoogleSignOut}
+                    className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-3"
+                >
+                    Sign out
+                </button>
+            </div>
         </div>
     )
 }
