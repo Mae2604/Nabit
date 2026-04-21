@@ -7,18 +7,17 @@ export default function Login(){
 
     return (
         <>
-                <div className="bg-white dark:bg-gray-800 dark:text-white p-8 mt-8">
-                    </div>
-                    <h1 className="text-3xl font-large dark:text-white text-grey-400 dark:font-semibold font-semibold text-center flex flex-col p-8">Sign in to Nabit</h1>
-                    <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 dark:bg-gray-600 g-10 p-6 w-100 h-100 mx-230 shadow-lg mt-8">
-                        <div className="space-y-4 text-center text-black-500 italic">
-                            <p>Welcome to Nabit</p>
+                <div className="flex items-center justify-center p-50">
+                    <img className="size-60" src="/nabitlogod.png" alternative="Nabit Logo" />
+                    <div className="rounded-lg ring-1 ring-gray-400 text-center bg-gray-100 flex flex-col text-center flex-row h-full dark:bg-gray-800 w-100 h-100 shadow-lg pb-8">
+                        <div className="text-center text-black dark:text-white">
+                            <p className="text-3xl font-large dark:text-white text-grey-400 dark:font-semibold font-semibold italic p-8">Sign in to Nabit</p>
                             <p>Fast delivery of food on campus from your peers to you!</p>
+                            <p className="text-gray-700 dark:text-gray-300 italic p-10 gap-8 mt-12">Please sign in to continue.</p>
+                             <button onClick={handleGoogleSignIn} className="w-52 h-10 bg-rose-600 dark:hover:bg-blue-950 dark:bg-blue-900 hover:bg-red-700 text-white rounded-2xl block mx-auto">Sign in with Google</button>
                             </div>
-                            <img className="size-60 mx-150 absolute -left-0" src="/nabitlogod.png" alternative="Nabit Logo" />
-                        <p className="text-gray-700 dark:text-gray-300 text-center flex flex-col max-w-sm gap-2 p-3 mt-12">Please sign in to continue.</p>
-                        <button onClick={handleGoogleSignIn} className="w-52 h-10 bg-rose-600 hover:bg-red-700 text-white rounded-2xl block mx-auto mt-10">Sign in with Google</button>
                             </div>
+                    </div>
 
         </>
         
